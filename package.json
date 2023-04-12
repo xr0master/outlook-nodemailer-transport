@@ -1,0 +1,55 @@
+{
+  "name": "outlook-nodemailer-transport",
+  "version": "1.0.0",
+  "description": "Outlook API and Nodemailer v4+. The plugin uses send scope only",
+  "private": false,
+  "author": "Sergey Khomushin <xr0master@gmail.com>",
+  "license": "MIT",
+  "main": "dist/OutlookTransport.js",
+  "types": "dist/OutlookTransport.d.ts",
+  "keywords": [
+    "outlook",
+    "nodemailer",
+    "transport",
+    "outlook nodemailer transport",
+    "nodemailer outlook transport"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xr0master/outlook-nodemailer-transport.git"
+  },
+  "scripts": {
+    "build:build-ts": "tsc",
+    "build:clean": "rm -rf ./build",
+    "build": "npm run build:clean && npm run lint && npm run build:build-ts",
+    "test": "jest",
+    "lint": "tsc --noEmit && eslint src"
+  },
+  "peerDependencies": {
+    "nodemailer": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "@types/nodemailer": "^6.4.7",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.38.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "jest": "^29.5.0",
+    "nodemailer": "^6.9.1",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 100,
+    "trailingComma": "all"
+  }
+}
