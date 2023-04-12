@@ -4,7 +4,7 @@ import type { Attachment } from 'nodemailer/lib/mailer';
 import { type Options, OutlookTransport } from './OutlookTransport';
 
 let accessToken: string =
-  'EwBwA8l6BAAUAOyDv0l6PcCVu89kmzvqZmkWABkAAdTXLsmFJ3oqJQnwZNDrQ2yev2frVq041+T4qpYhSstdf62n0Mi/0sCaKVx1Wx1kMd1RyQ4afxIo4XbUt6fc/yd8AIiQhFud66SDkm3Ctf+QKu17jSMoEGDqthnWYwfJ66mdyBeoInHResq5t028TCysgsFuECFnDFPmZA5JosnxELxadwsOABZgXNv6rdJVzbF+P+7AVRID4Elmi6wK1lNAStSUaXOgdRK8/vz7kG9BPe6Shff2UxoXA+SAB6TeCULGDq4vQrLxc9VN+u7+cbPRM4V5PgZNq+a/rZ9H0lpvAOI24Lj0xQ6U/6bSjICLEd8l0k0DkK3tz9vuf0Hn5ZADZgAACMqjE7RV+QkbQAI/GSLIPDxByGKW+NKqYUXBRj64GliV8x0HUO1ybQ3744FwcmnnLqM7iV67czSkIH8OD70JpCTTSBBBuuQrk2girX/woWMfyT62fpOWXp2geQrBqVNBLs5X2HzAjP3i3ilBtwiHNygE9xYwYr6Hcf2g29fcuzOoTVOMr2frS8FVZ48cs2DPyxTXUfWXANJo643JlAARAUHRKDTBJgYCCXlMoBBjVOfFmhToro2RHTeaj2ErONQFFOSxbKpF8DFBMTIcQsM8kLUwzHdjYw5xMNIIAwk2DeVfcvkuhuJFz909VPGo+jDWT3n9WpvqjKUMcAzu44NFbgjWYRDv5FkuecLAvlInaB3b+DEQD5kgvRcNQ7LxiMij1qngFusA+pw78aJpJGXC1aFt7bQEQ8OJKFPqMRhmio2inhzjId6SOastj81mObMACZARKExTxuyvxNXwSvAueEnzpp/4Vz+DE+WldRyzFdqsKGzYlHcWnvv4/OvFGyxwMsMawzbXpEetZTow7pjOX1tbIQvWUABRrb0c8hPZagm9IFTLmPFrMJaKHQVWqLxQj3qcnWAqkYOaHc/ER6f65Zt2NiGFpowwZXVAUyhaD4WctkvXmcIbNFiupP9dG+Lx8qWm4z+BB2o84QERiXC056RrWWr+wF7nnpvRbsfbqTXZtdT7wCOSGrD4TsKhZOKoI1I2bjZvRsCuBKq/Mpoi0EXUFTTm+ELmjixKCN1GzeiG/NBi5HXiUeL4yxfRWBHBg9Bv0QmmLue1cKOBAg==';
+  'EwBwA8l6BAAUAOyDv0l6PcCVu89kmzvqZmkWABkAAcH5I0ZNiaxyNb084c4tD9nciPtN9dIo4PEzCfqKa4TE4q8qcPfO3+L6Oytn7QTR1ggMD1kGqjOBQuDu9JEGa2L6n5wBQgmqvUXu3ZuvHPU47MR3NzBnH/QO70hNudxaaRo9PhDhZZhRswCGsKVwPogOkELNepAcLGpTYpa0zFbZ2WYIkkuuHl4L6w6y+oZooKQWhlEeWsWN6FwNvhACL7vr/vp23hKzR6P1jWenzcOIRhXiioBmn+IMg54rnWahmxQVEbNXkvJtCrTGfYXsOVkXJYQluH3VO/mtHjF/c5gy/loY6XCLFqsB6wVLBXZyGRZ6GmaY0YNrhkKJJWpSNtIDZgAACJ7697Xw/HEfQAIL1PR3kIHdCgqWFn7D80Rh/y7+eSAEZ1sVEUcg8cF/G4EGZ8w5SqMp5lquki7wJsVdMNzN28Y4oWzHpyVHRUX1YKWLjIqxNJfy5U8c79P8KsiH58JnbeswPBfNkttoQv1RVCvst1fEMUI/e7O3IeCJF7i3Om4lgsu19Cv+xmIUcQrQ6H6a9h6AHAxcq5cIVtsn9DbclLu9zueH0APvIpofQapiQ1bxyVSCFDVXMBjGtJZbe+KPRXOcG6Y9AWXLdgQh7Ffsm9etOULH6zpvQKKa4zfxYjOJBIGHwBq0MDJT898+ibWDEmXrXoQlYuDfuP118YI6DBpbj9dWDG7BAEuZG6f2PI/tGCfrYithNfA2AX/GTcCgllsKvFZg7s6X3smSJCusljDlSRyOot1Lp5WkHVOGOq8w4hfdSdKZGXW8UEYUQDzWzeT3m8Cv5dca77K9ENW3f0Eb2FVnxn8X8fXY44e6w9fFuIEic6QVlOQY75dCvpCrybVFmZn2Jw3XECXrFvvwjEjnEHY3ElOpcbc0t96/gtMo5ZSC2OYSArXeRSIt1ZLusZKdNymXvKnRp6RoBLh4YcOuda2Rnc/8GZntE2lfv5KjYWkQyWiDnWSGVYDqUr9YEmdnEAIbzxphkU38m22iEIu/S/yAa3AZ61iV5c7d7jRcQEdBBeynoOmI7TALeuojYfNtwmSoAfLXp4mO2cesT9wIfLqWKM353smEjktMmAtt33hogYSWOjx1hiNBIcVdGucWyL/ImZXFMDqBAg==';
 let refreshToken: string = 'REFRESH_TOKEN';
 let clientId: string = 'CLIENT_ID';
 let clientSecret: string = 'CLIENT_SECRET';
@@ -63,35 +63,33 @@ it('should send mail to bcc', (done) => {
     });
 });
 
-// it('should failed with refreshToken and accessToken', (done) => {
-//   expect.assertions(1);
-
-//   createTransport(
-//     new GmailTransport(<Options>{
-//       userId: 'me',
-//       auth: {
-//         clientId: clientId,
-//         clientSecret: clientSecret,
-//         accessToken: accessToken + 'wrong',
-//         refreshToken: refreshToken + 'wrong',
-//       },
-//     }),
-//   )
-//     .sendMail({
-//       from: 'sergey@emailjs.com',
-//       to: 'sergey@emailjs.com',
-//       subject: 'Gmail Transport HTML Test',
-//       html: '<!DOCTYPE html><html><body><b>This is HTML content</b></body></html>',
-//       text: 'This is HTML content',
-//     })
-//     .then((info) => {
-//       throw info;
-//     })
-//     .catch((error) => {
-//       expect(error).toBeDefined();
-//       done();
-//     });
-// });
+it('should failed with refreshToken and accessToken', (done) => {
+  createTransport(
+    new OutlookTransport(<Options>{
+      userId: 'me',
+      auth: {
+        clientId: clientId,
+        clientSecret: clientSecret,
+        accessToken: accessToken + 'wrong',
+        refreshToken: refreshToken + 'wrong',
+      },
+    }),
+  )
+    .sendMail({
+      from: 'smtp4test@outlook.com',
+      to: 'sergey@emailjs.com',
+      subject: 'Gmail Transport HTML Test',
+      html: '<!DOCTYPE html><html><body><b>This is HTML content</b></body></html>',
+      text: 'This is HTML content',
+    })
+    .then((info) => {
+      throw info;
+    })
+    .catch((error) => {
+      expect(error).toBeDefined();
+      done();
+    });
+});
 
 it('should send mail with embedded attachments as URL', (done) => {
   createTransport(
@@ -155,40 +153,38 @@ it('should send mail with embedded attachments as base64', (done) => {
     });
 });
 
-// it(
-//   'should send mail with 7mb attachments as URL',
-//   (done) => {
-//     expect.assertions(1);
-
-//     createTransport(
-//       new GmailTransport(<Options>{
-//         auth: {
-//           accessToken: accessToken,
-//         },
-//       }),
-//     )
-//       .sendMail({
-//         from: 'sergey@emailjs.com',
-//         to: 'Sergey <sergey@emailjs.com>',
-//         subject: 'Gmail Transport Huge Attachment',
-//         html: '<!DOCTYPE html><html><body>This is a test email</body></html>',
-//         attachments: [
-//           <Attachment>{
-//             path: 'https://emailjs-dev-attachments.s3-us-west-2.amazonaws.com/VK0IR_Voyage.PDF',
-//             filename: 'file.pdf',
-//           },
-//         ],
-//       })
-//       .then((info) => {
-//         expect(info).toBeDefined();
-//         done();
-//       })
-//       .catch((error) => {
-//         throw error;
-//       });
-//   },
-//   5 * 60 * 1000,
-// ); // 5min
+it(
+  'should send mail with 7mb attachments as URL',
+  (done) => {
+    createTransport(
+      new OutlookTransport(<Options>{
+        auth: {
+          accessToken: accessToken,
+        },
+      }),
+    )
+      .sendMail({
+        from: 'smtp4test@outlook.com',
+        to: 'Sergey <sergey@emailjs.com>',
+        subject: 'Outlook Transport Huge Attachment',
+        html: '<!DOCTYPE html><html><body>This is a test email</body></html>',
+        attachments: [
+          <Attachment>{
+            path: 'https://emailjs-dev-attachments.s3.us-west-2.amazonaws.com/sdk-test/VK0IR_Voyage.PDF',
+            filename: 'file.pdf',
+          },
+        ],
+      })
+      .then((info) => {
+        expect(info).toBeDefined();
+        done();
+      })
+      .catch((error) => {
+        throw error;
+      });
+  },
+  5 * 60 * 1000,
+); // 5min
 
 // it('should refresh token and send the mail', (done) => {
 //   expect.assertions(1);

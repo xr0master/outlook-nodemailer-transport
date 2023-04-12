@@ -66,15 +66,17 @@ export function post<DataResponse>(
   return sendRequest<DataResponse>(options, postData);
 }
 
-export function postRFC822<DataResponse>(
+export function postJSON<DataResponse>(
   options: RequestOptions,
-  data: string,
+  data: Record<string, unknown>,
 ): Promise<DataResponse | string> {
+  const json = JSON.stringify(data);
+
   options.method = 'POST';
   options.headers = Object.assign(options.headers || {}, {
-    'Content-Type': 'text/plain',
-    'Content-Length': Buffer.byteLength(data),
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(json),
   });
 
-  return sendRequest<DataResponse>(options, data);
+  return sendRequest<DataResponse>(options, json);
 }
