@@ -1,19 +1,11 @@
 import type { SentMessageInfo, Transport } from 'nodemailer';
 import type { Options as OAuth2Options } from 'nodemailer/lib/xoauth2';
 import type MailMessage from 'nodemailer/lib/mailer/mail-message';
-import type { Address } from 'nodemailer/lib/mailer';
 
 import { post, postJSON } from './services/Requestly';
+import { buildData } from './models/Outlook';
 
 type DoneCallback = (err: Error | null, info?: SentMessageInfo) => void;
-
-interface OAuth2 {
-  access_token: string;
-  token_type: string;
-  id_token: string;
-  scope: string;
-  expires_in: number;
-}
 
 export interface Options {
   auth: OAuth2Options;
@@ -29,10 +21,31 @@ function refreshTokenParams(auth: OAuth2Options): Record<string, string> {
   };
 }
 
+interface OutlookError {
+  error_description: string;
+  error: {
+    code: string;
+    message: string;
+    innerError: Object;
+  };
+}
+
+function getErrorCode(error: OutlookError['error']): string {
+  return typeof error === 'object' && error !== null ? error.code : '';
+}
+
 function createError(error: string): Error {
   if (!error) return new Error('Please check your account');
 
   return new Error(error);
+}
+
+interface OAuth2 {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token: string;
+  scope?: string;
 }
 
 export class OutlookTransport implements Transport {
@@ -41,12 +54,12 @@ export class OutlookTransport implements Transport {
 
   constructor(private options: Options) {}
 
-  private getAccessToken(): Promise<string> {
+  private getAccessToken(): Promise<Pick<OAuth2, 'access_token' | 'refresh_token'>> {
     return post<OAuth2>(
       {
         protocol: 'https:',
-        hostname: 'graph.microsoft.com',
-        path: '/oauth2/v4/token',
+        hostname: 'login.microsoftonline.com',
+        path: '/common/oauth2/v2.0/token',
       },
       refreshTokenParams(this.options.auth),
     ).then((data) => {
@@ -54,7 +67,10 @@ export class OutlookTransport implements Transport {
         return Promise.reject(data);
       }
 
-      return data.access_token;
+      return {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+      };
     });
   }
 
@@ -77,40 +93,10 @@ export class OutlookTransport implements Transport {
       if (error) return done(error);
       if (!data) return done(new Error('The email data is corrapted.'));
 
-      const outlookData = {
-        message: {
-          subject: data.subject,
-          body: {
-            contentType: 'HTML',
-            content: data.html,
-          },
-          from: {
-            emailAddress: data.from,
-          },
-          toRecipients: [
-            {
-              emailAddress: {
-                name: (data.to as Address[])[0].name,
-                address: (data.to as Address[])[0].address,
-              },
-            },
-          ],
-          // attachments: [
-          //   {
-          //     '@odata.type': '#microsoft.graph.fileAttachment',
-          //     contentId: data.attachments![0].cid, // test if it will break for non embedded
-          //     name: data.attachments![0].filename,
-          //     contentType: data.attachments![0].contentType,
-          //     contentBytes: data.attachments![0].content,
-          //   },
-          // ],
-        },
-      };
+      const outlookData = buildData(data);
 
-      console.time();
       this.sendMail(outlookData, this.options.auth.accessToken!).then(
         (message) => {
-          console.timeEnd();
           done(null, {
             envelope: mail.message.getEnvelope(),
             messageId: mail.message.messageId(),
@@ -118,20 +104,29 @@ export class OutlookTransport implements Transport {
             message: message,
           });
         },
-        (error) => {
-          // if (error === 401 && this.options.auth.refreshToken) {
-          //   this.getAccessToken()
-          //     .then((accessToken: string) => {
-          //       this.sendMail(data, accessToken, mail, done).catch((error) =>
-          //         done(createError(error)),
-          //       );
-          //     })
-          //     .catch((error) => done(createError(error)));
-          // } else {
-          console.timeEnd();
-          console.error(error);
-          done(createError(error));
-          //}
+        (err) => {
+          if (
+            getErrorCode(err.error) === 'InvalidAuthenticationToken' &&
+            this.options.auth.refreshToken
+          ) {
+            this.getAccessToken()
+              .then((tokens: Pick<OAuth2, 'access_token' | 'refresh_token'>) => {
+                this.sendMail(outlookData, tokens.access_token).then(
+                  (message) => {
+                    done(null, {
+                      envelope: mail.message.getEnvelope(),
+                      messageId: mail.message.messageId(),
+                      accessToken: tokens.access_token!,
+                      message: message,
+                    });
+                  },
+                  (err) => done(createError(err)),
+                );
+              })
+              .catch((err) => done(createError(err)));
+          } else {
+            done(createError(err));
+          }
         },
       );
     });

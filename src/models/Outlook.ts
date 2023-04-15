@@ -1,112 +1,56 @@
 import type { SendMailOptions } from 'nodemailer';
 import type { Address } from 'nodemailer/lib/mailer';
 
-const TRANSFORM_FIELDS: object = {
-  replyTo: 'Reply-To',
+interface EmailAddress {
+  emailAddress: Address;
+}
+
+interface Attachment {
+  '@odata.type': '#microsoft.graph.fileAttachment';
+  contentType: string;
+  name: string;
+  contentBytes: string;
+  contentId: string;
+}
+
+const getAddress = (address: Address): EmailAddress => {
+  return {
+    emailAddress: address,
+  };
 };
 
-const TO_KEYS: To['type'][] = ['to', 'cc', 'bcc'];
-const HEADERS = ['replyTo'] as const;
+const getAddressCollection = (addresses: Address[] = []): EmailAddress[] => {
+  return addresses.map(getAddress);
+};
 
-interface To {
-  email: string;
-  name?: string;
-  type?: 'to' | 'cc' | 'bcc';
-}
+const appendAttachments = (data: SendMailOptions): Attachment[] => {
+  if (!Array.isArray(data.attachments)) return [];
 
-interface Attachments {
-  type: string;
-  name: string;
-  content: string;
-}
-
-// const getFromName = (data: SendMailOptions): string => {
-//   if (data.from) {
-//     return (data.from as Address).name || '';
-//   }
-
-//   return '';
-// };
-
-// const getFromAddress = (data: SendMailOptions): string => {
-//   if (data.from) {
-//     return (data.from as Address).address || '';
-//   }
-
-//   return '';
-// };
-
-// const appendHeaders = (data: SendMailOptions): Object => {
-//   return HEADERS.reduce((headers, key) => {
-//     if (data[key]) {
-//       headers[TRANSFORM_FIELDS[key] || key] = data[key];
-//     }
-
-//     return headers;
-//   }, {});
-// };
-
-// const appendAddresses = (data: SendMailOptions): To[] => {
-//   return TO_KEYS.reduce((accumulator, target) => {
-//     if (!data[target]) return accumulator;
-
-//     (data[target] as Address[]).forEach((to) => {
-//       accumulator.push({
-//         email: to.address,
-//         name: to.name,
-//         type: target,
-//       });
-//     });
-
-//     return accumulator;
-//   }, [] as To[]);
-// };
-
-// const appendAttachments = (data: SendMailOptions): Attachments[] => {
-//   if (!Array.isArray(data.attachments)) return [];
-
-//   return data.attachments.reduce((accumulator, attachment) => {
-//     if (!attachment.contentType.startsWith('image/')) {
-//       accumulator.push({
-//         name: attachment.filename || attachment.cid,
-//         type: attachment.contentType,
-//         content: attachment.content as string,
-//       });
-//     }
-
-//     return accumulator;
-//   }, [] as Attachments[]);
-// };
-
-// const appendImages = (data: SendMailOptions): Attachments[] => {
-//   if (!Array.isArray(data.attachments)) return [];
-
-//   return data.attachments.reduce((accumulator, attachment) => {
-//     if (attachment.contentType.startsWith('image/')) {
-//       accumulator.push({
-//         name: attachment.cid,
-//         type: attachment.contentType,
-//         content: attachment.content as string,
-//       });
-//     }
-
-//     return accumulator;
-//   }, [] as Attachments[]);
-// };
+  return data.attachments.map<Attachment>((attachment) => {
+    return {
+      '@odata.type': '#microsoft.graph.fileAttachment',
+      contentId: attachment.cid!,
+      name: attachment.filename as string,
+      contentType: attachment.contentType!,
+      contentBytes: attachment.content as string,
+    };
+  });
+};
 
 export const buildData = (data: SendMailOptions) => {
   return {
     message: {
       subject: data.subject,
-      
-      //html: data.html,
-      //text: data.text,
-      from_email: getFromAddress(data),
-      from_name: getFromName(data),
-      to: appendAddresses(data),
-      headers: appendHeaders(data),
-      //attachments: appendAttachments(data),
-      //images: appendImages(data),
+      body: {
+        contentType: 'HTML',
+        content: data.html,
+      },
+      from: getAddress(data.from as Address),
+      toRecipients: getAddressCollection(data.to as Address[]),
+      ccRecipients: getAddressCollection(data.cc as Address[]),
+      bccRecipients: getAddressCollection(data.bcc as Address[]),
+      replyTo: getAddressCollection(data.replyTo as Address[]),
+      attachments: appendAttachments(data),
     },
   };
 };
