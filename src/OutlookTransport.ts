@@ -22,7 +22,6 @@ function refreshTokenParams(auth: OAuth2Options): Record<string, string> {
 }
 
 interface OutlookError {
-  error_description: string;
   error: {
     code: string;
     message: string;
@@ -34,10 +33,14 @@ function getErrorCode(error: OutlookError['error']): string {
   return typeof error === 'object' && error !== null ? error.code : '';
 }
 
-function createError(error: string): Error {
-  if (!error) return new Error('Please check your account');
+function createError(oError: OutlookError | string): Error {
+  if (!(typeof oError === 'object' && oError !== null)) return new Error(oError);
 
-  return new Error(error);
+  if (typeof oError.error === 'object' && oError.error !== null) {
+    return new Error(oError.error.message);
+  }
+
+  return new Error(oError.error);
 }
 
 interface OAuth2 {
