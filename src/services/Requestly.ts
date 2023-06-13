@@ -27,7 +27,7 @@ function sendRequest<Response = unknown>(
       res.on('end', () => {
         const data = parseJSON<Response>(Buffer.concat(chunks).toString());
 
-        if (res.statusCode === 202) {
+        if (res.statusCode === 202 || res.statusCode === 200) {
           resolve(data);
         } else {
           reject(data);
