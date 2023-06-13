@@ -117,6 +117,7 @@ export class OutlookTransport implements Transport {
                       envelope: mail.message.getEnvelope(),
                       messageId: mail.message.messageId(),
                       accessToken: tokens.access_token!,
+                      refreshToken: tokens.refresh_token!,
                       message: message,
                     });
                   },
