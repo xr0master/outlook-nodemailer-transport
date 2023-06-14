@@ -19,7 +19,7 @@
     "noUnusedParameters": true,
     "removeComments": false,
     "sourceMap": false,
-    "outDir": "dist"
+    "outDir": "build"
   },
   "include": ["src"],
   "exclude": ["src/**/*.spec.ts"]

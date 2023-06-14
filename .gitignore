@@ -3,7 +3,7 @@
 
 node_modules/
 coverage/
-dist/
+build/
 .idea/
 *.swp
 .DS_Store
