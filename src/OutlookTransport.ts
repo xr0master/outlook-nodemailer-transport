@@ -22,11 +22,14 @@ function refreshTokenParams(auth: OAuth2Options): Record<string, string> {
 }
 
 interface OutlookError {
-  error: {
-    code: string;
-    message: string;
-    innerError: Record<string, unknown>;
-  };
+  error_description: string;
+  error:
+    | {
+        code: string;
+        message: string;
+        innerError: Record<string, unknown>;
+      }
+    | string;
 }
 
 function getErrorCode(error: OutlookError['error']): string {
@@ -36,8 +39,17 @@ function getErrorCode(error: OutlookError['error']): string {
 function createError(oError: OutlookError | string): Error {
   if (!(typeof oError === 'object' && oError !== null)) return new Error(oError);
 
+  if (oError.error === 'invalid_grant') {
+    // return a better message instead of 'Bad Request' from the Outlook error_description.
+    return new Error('Invalid grant. Please reconnect your Outlook account');
+  }
+
   if (typeof oError.error === 'object' && oError.error !== null) {
     return new Error(oError.error.message);
+  }
+
+  if (oError.error_description) {
+    return new Error(oError.error_description);
   }
 
   return new Error(oError.error);
