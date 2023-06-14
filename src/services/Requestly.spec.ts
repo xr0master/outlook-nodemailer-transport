@@ -21,7 +21,7 @@ it('should send post request', async () => {
     },
   ).then(
     (data) => {
-      expect((data as HTTPBin).json!.id).toBeDefined();
+      expect((data as HTTPBin).form!.id).toBeDefined();
     },
     (error) => {
       throw error;
