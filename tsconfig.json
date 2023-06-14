@@ -1,36 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ESNext",
     "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
     "typeRoots": ["node_modules/@types"],
-    "lib": ["ESNext"],
-    "moduleResolution": "Node",
-    "strict": true,
-    "esModuleInterop": true,
-    "allowJs": false,
-    "skipLibCheck": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "strictBindCallApply": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
-    "declaration": false,
+    "declaration": true,
+    "strict": true,
+    "noImplicitAny": true,
     "noLib": false,
+    "skipLibCheck": true,
+    "preserveConstEnums": true,
+    "allowUnusedLabels": false,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "removeComments": true,
-    "sourceMap": true,
-    "outDir": "build",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "#app/*": ["./src/*"]
-    }
+    "noUnusedParameters": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts"],
-  "compileOnSave": false
+  "include": ["src"],
+  "exclude": ["src/**/*.spec.ts"]
 }

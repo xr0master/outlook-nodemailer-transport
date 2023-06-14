@@ -5,8 +5,8 @@
   "private": false,
   "author": "Sergey Khomushin <xr0master@gmail.com>",
   "license": "MIT",
-  "main": "dist/OutlookTransport.js",
-  "types": "dist/OutlookTransport.d.ts",
+  "main": "build/OutlookTransport.js",
+  "types": "build/OutlookTransport.d.ts",
   "keywords": [
     "outlook",
     "nodemailer",
@@ -22,7 +22,7 @@
     "build:build-ts": "tsc",
     "build:clean": "rm -rf ./build",
     "build": "npm run build:clean && npm run lint && npm run build:build-ts",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "tsc --noEmit && eslint src"
   },
   "peerDependencies": {
