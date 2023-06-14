@@ -47,9 +47,9 @@ export const buildData = (data: SendMailOptions) => {
       },
       from: getAddress(data.from as Address),
       toRecipients: getAddressCollection(data.to as Address[]),
-      ccRecipients: getAddressCollection(data.cc as Address[]),
-      bccRecipients: getAddressCollection(data.bcc as Address[]),
-      replyTo: getAddressCollection(data.replyTo as Address[]),
+      ccRecipients: getAddressCollection((data.cc || []) as Address[]),
+      bccRecipients: getAddressCollection((data.bcc || []) as Address[]),
+      replyTo: getAddressCollection((data.replyTo || []) as Address[]),
       attachments: appendAttachments(data),
     },
   };
