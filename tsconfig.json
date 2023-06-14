@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "lib": ["ESNext", "DOM"],
-    "typeRoots": ["node_modules/@types"],
+    "module": "CommonJS",
+    "lib": ["ESNext"],
     "moduleResolution": "node",
     "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
