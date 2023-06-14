@@ -3,14 +3,13 @@ import type { Attachment } from 'nodemailer/lib/mailer';
 
 import { type Options, OutlookTransport } from './OutlookTransport';
 
-let accessToken: string =
-  'EwBwA8l6BAAUAOyDv0l6PcCVu89kmzvqZmkWABkAAcH5I0ZNiaxyNb084c4tD9nciPtN9dIo4PEzCfqKa4TE4q8qcPfO3+L6Oytn7QTR1ggMD1kGqjOBQuDu9JEGa2L6n5wBQgmqvUXu3ZuvHPU47MR3NzBnH/QO70hNudxaaRo9PhDhZZhRswCGsKVwPogOkELNepAcLGpTYpa0zFbZ2WYIkkuuHl4L6w6y+oZooKQWhlEeWsWN6FwNvhACL7vr/vp23hKzR6P1jWenzcOIRhXiioBmn+IMg54rnWahmxQVEbNXkvJtCrTGfYXsOVkXJYQluH3VO/mtHjF/c5gy/loY6XCLFqsB6wVLBXZyGRZ6GmaY0YNrhkKJJWpSNtIDZgAACJ7697Xw/HEfQAIL1PR3kIHdCgqWFn7D80Rh/y7+eSAEZ1sVEUcg8cF/G4EGZ8w5SqMp5lquki7wJsVdMNzN28Y4oWzHpyVHRUX1YKWLjIqxNJfy5U8c79P8KsiH58JnbeswPBfNkttoQv1RVCvst1fEMUI/e7O3IeCJF7i3Om4lgsu19Cv+xmIUcQrQ6H6a9h6AHAxcq5cIVtsn9DbclLu9zueH0APvIpofQapiQ1bxyVSCFDVXMBjGtJZbe+KPRXOcG6Y9AWXLdgQh7Ffsm9etOULH6zpvQKKa4zfxYjOJBIGHwBq0MDJT898+ibWDEmXrXoQlYuDfuP118YI6DBpbj9dWDG7BAEuZG6f2PI/tGCfrYithNfA2AX/GTcCgllsKvFZg7s6X3smSJCusljDlSRyOot1Lp5WkHVOGOq8w4hfdSdKZGXW8UEYUQDzWzeT3m8Cv5dca77K9ENW3f0Eb2FVnxn8X8fXY44e6w9fFuIEic6QVlOQY75dCvpCrybVFmZn2Jw3XECXrFvvwjEjnEHY3ElOpcbc0t96/gtMo5ZSC2OYSArXeRSIt1ZLusZKdNymXvKnRp6RoBLh4YcOuda2Rnc/8GZntE2lfv5KjYWkQyWiDnWSGVYDqUr9YEmdnEAIbzxphkU38m22iEIu/S/yAa3AZ61iV5c7d7jRcQEdBBeynoOmI7TALeuojYfNtwmSoAfLXp4mO2cesT9wIfLqWKM353smEjktMmAtt33hogYSWOjx1hiNBIcVdGucWyL/ImZXFMDqBAg==';
+let accessToken: string = 'ACCESS_TOKEN';
 let refreshToken: string = 'REFRESH_TOKEN';
 let clientId: string = 'CLIENT_ID';
 let clientSecret: string = 'CLIENT_SECRET';
 
-it('should send the mail', (done) => {
-  createTransport(
+it('should send the mail', async () => {
+  return createTransport(
     new OutlookTransport(<Options>{
       userId: 'me',
       auth: {
@@ -30,15 +29,14 @@ it('should send the mail', (done) => {
     })
     .then((info) => {
       expect(info).toBeDefined();
-      done();
     })
     .catch((error) => {
       throw error;
     });
 });
 
-it('should send mail to bcc', (done) => {
-  createTransport(
+it('should send mail to bcc', async () => {
+  return createTransport(
     new OutlookTransport(<Options>{
       userId: 'me',
       auth: {
@@ -56,29 +54,28 @@ it('should send mail to bcc', (done) => {
     })
     .then((info) => {
       expect(info).toBeDefined();
-      done();
     })
     .catch((error) => {
       throw error;
     });
 });
 
-it('should failed with refreshToken and accessToken', (done) => {
-  createTransport(
+it('should failed with refreshToken and accessToken', async () => {
+  return createTransport(
     new OutlookTransport(<Options>{
       userId: 'me',
       auth: {
         clientId: clientId,
         clientSecret: clientSecret,
-        accessToken: accessToken + 'wrong',
-        refreshToken: refreshToken + 'wrong',
+        accessToken: 'wrong',
+        refreshToken: 'wrong',
       },
     }),
   )
     .sendMail({
       from: 'smtp4test@outlook.com',
       to: 'sergey@emailjs.com',
-      subject: 'Gmail Transport HTML Test',
+      subject: 'Outlook Failed Transport HTML Test',
       html: '<!DOCTYPE html><html><body><b>This is HTML content</b></body></html>',
       text: 'This is HTML content',
     })
@@ -87,12 +84,11 @@ it('should failed with refreshToken and accessToken', (done) => {
     })
     .catch((error) => {
       expect(error).toBeDefined();
-      done();
     });
 });
 
-it('should send mail with embedded attachments as URL', (done) => {
-  createTransport(
+it('should send mail with embedded attachments as URL', async () => {
+  return createTransport(
     new OutlookTransport(<Options>{
       auth: {
         accessToken: accessToken,
@@ -113,15 +109,14 @@ it('should send mail with embedded attachments as URL', (done) => {
     })
     .then((info) => {
       expect(info).toBeDefined();
-      done();
     })
     .catch((error) => {
       throw error;
     });
 });
 
-it('should send mail with embedded attachments as base64', (done) => {
-  createTransport(
+it('should send mail with embedded attachments as base64', async () => {
+  return createTransport(
     new OutlookTransport(<Options>{
       auth: {
         accessToken: accessToken,
@@ -146,7 +141,6 @@ it('should send mail with embedded attachments as base64', (done) => {
     })
     .then((info) => {
       expect(info).toBeDefined();
-      done();
     })
     .catch((error) => {
       throw error;
@@ -155,8 +149,8 @@ it('should send mail with embedded attachments as base64', (done) => {
 
 it(
   'should send mail with 7mb attachments as URL',
-  (done) => {
-    createTransport(
+  async () => {
+    return createTransport(
       new OutlookTransport(<Options>{
         auth: {
           accessToken: accessToken,
@@ -177,7 +171,6 @@ it(
       })
       .then((info) => {
         expect(info).toBeDefined();
-        done();
       })
       .catch((error) => {
         throw error;
@@ -186,54 +179,49 @@ it(
   5 * 60 * 1000,
 ); // 5min
 
-// it('should refresh token and send the mail', (done) => {
-//   expect.assertions(1);
+it('should refresh token and send the mail', async () => {
+  return createTransport(
+    new OutlookTransport(<Options>{
+      userId: 'me',
+      auth: {
+        clientId: clientId,
+        clientSecret: clientSecret,
+        accessToken: 'wrong',
+        refreshToken: refreshToken,
+      },
+    }),
+  )
+    .sendMail({
+      from: 'smtp4test@outlook.com',
+      to: 'sergey@emailjs.com',
+      subject: 'Outlook Transport HTML Test',
+      html: '<!DOCTYPE html><html><body><b>This is HTML content</b></body></html>',
+      text: 'This is HTML content',
+    })
+    .then((info) => {
+      console.log(info);
+      expect(info).toBeDefined();
+    })
+    .catch((error) => {
+      throw error;
+    });
+});
 
-//   createTransport(
-//     new GmailTransport(<Options>{
-//       userId: 'me',
-//       auth: {
-//         clientId: clientId,
-//         clientSecret: clientSecret,
-//         accessToken: accessToken + 'wrong',
-//         refreshToken: refreshToken,
-//       },
-//     }),
-//   )
-//     .sendMail({
-//       from: 'sergey@emailjs.com',
-//       to: 'sergey@emailjs.com',
-//       subject: 'Gmail Transport HTML Test',
-//       html: '<!DOCTYPE html><html><body><b>This is HTML content</b></body></html>',
-//       text: 'This is HTML content',
-//     })
-//     .then((info) => {
-//       expect(info).toBeDefined();
-//       done();
-//     })
-//     .catch((error) => {
-//       throw error;
-//     });
-// });
-
-// it('should fail with Gmail error', (done) => {
-//   expect.assertions(1);
-
-//   createTransport(
-//     new GmailTransport(<Options>{
-//       auth: {
-//         accessToken: accessToken + 'wrong',
-//       },
-//     }),
-//   )
-//     .sendMail({})
-//     .then(
-//       (info) => {
-//         throw info;
-//       },
-//       (error) => {
-//         expect(error).toBeDefined();
-//         done();
-//       },
-//     );
-// });
+it('should fail with Outlook error', async () => {
+  return createTransport(
+    new OutlookTransport(<Options>{
+      auth: {
+        accessToken: accessToken + 'wrong',
+      },
+    }),
+  )
+    .sendMail({})
+    .then(
+      (info) => {
+        throw info;
+      },
+      (error) => {
+        expect(error).toBeDefined();
+      },
+    );
+});
