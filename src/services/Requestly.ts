@@ -55,7 +55,7 @@ export function post<DataResponse>(
   options: RequestOptions,
   params: Record<string, string>,
 ): Promise<DataResponse | string> {
-  let postData: string = makeParams(params);
+  const postData: string = makeParams(params);
 
   options.method = 'POST';
   options.headers = {

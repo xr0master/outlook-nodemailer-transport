@@ -25,7 +25,7 @@ interface OutlookError {
   error: {
     code: string;
     message: string;
-    innerError: Object;
+    innerError: Record<string, unknown>;
   };
 }
 
@@ -52,8 +52,8 @@ interface OAuth2 {
 }
 
 export class OutlookTransport implements Transport {
-  public name: string = 'OutlookTransport';
-  public version: string = 'N/A';
+  public name = 'OutlookTransport';
+  public version = 'N/A';
 
   constructor(private options: Options) {}
 
@@ -107,7 +107,7 @@ export class OutlookTransport implements Transport {
             message: message,
           });
         },
-        (err) => {
+        (err: OutlookError) => {
           if (
             getErrorCode(err.error) === 'InvalidAuthenticationToken' &&
             this.options.auth.refreshToken
@@ -119,15 +119,15 @@ export class OutlookTransport implements Transport {
                     done(null, {
                       envelope: mail.message.getEnvelope(),
                       messageId: mail.message.messageId(),
-                      accessToken: tokens.access_token!,
-                      refreshToken: tokens.refresh_token!,
+                      accessToken: tokens.access_token,
+                      refreshToken: tokens.refresh_token,
                       message: message,
                     });
                   },
-                  (err) => done(createError(err)),
+                  (err: OutlookError | string) => done(createError(err)),
                 );
               })
-              .catch((err) => done(createError(err)));
+              .catch((err: OutlookError | string) => done(createError(err)));
           } else {
             done(createError(err));
           }
