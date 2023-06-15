@@ -44,12 +44,12 @@ function createError(oError: OutlookError | string): Error {
     return new Error('Invalid grant. Please reconnect your Outlook account');
   }
 
-  if (typeof oError.error === 'object' && oError.error !== null) {
-    return new Error(oError.error.message);
-  }
-
   if (oError.error_description) {
     return new Error(oError.error_description);
+  }
+
+  if (typeof oError.error === 'object' && oError.error !== null) {
+    return new Error(oError.error.message);
   }
 
   return new Error(oError.error);
