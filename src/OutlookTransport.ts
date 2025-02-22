@@ -106,7 +106,7 @@ export class OutlookTransport implements Transport {
   public send(mail: MailMessage, done: DoneCallback): void {
     mail.normalize((error, data) => {
       if (error) return done(error);
-      if (!data) return done(new Error('The email data is corrapted.'));
+      if (!data) return done(new Error('The email data is corrupted.'));
 
       const outlookData = buildData(data);
 
